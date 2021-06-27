@@ -1,6 +1,7 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 import { authReducer } from './slices/authSlice';
+import { inventoryReducer } from './slices/inventorySlice';
 import { shoppingCartReducer } from './slices/shoppingCartSlice';
 
 
@@ -8,7 +9,8 @@ import { shoppingCartReducer } from './slices/shoppingCartSlice';
 //root reeducer
 const rootReducer = combineReducers({
     shoppingCart: shoppingCartReducer,
-    auth: authReducer
+    auth: authReducer,
+    inventory: inventoryReducer
 })
 
 //export RootState as a type
@@ -21,7 +23,7 @@ const store = configureStore({
 
 //configure custom dispatch typing
 export type AppDispatch = typeof store.dispatch
-export const useAppDispatch = () => useDispatch<AppDispatch>() // Export a hook that can be reused to resolve types
+export const useAppDispatch = () => { return useDispatch<AppDispatch>() }; // Export a hook that can be reused to resolve types
 
 //export store
 export default store;

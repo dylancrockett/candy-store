@@ -1,8 +1,14 @@
 import { Button, Paper, TextField, Typography } from '@material-ui/core';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import loginStyles from './LoginStyles';
 import validator from 'validator';
 import passwordValidator from 'password-validator';
+import axios from 'axios';
+import { useSnackbar } from 'notistack';
+import { getLoggedIn, setLoggedIn } from '../../redux/slices/authSlice';
+import { useAppDispatch } from '../../redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
 
 //login form type
 interface LoginForm {
@@ -32,6 +38,23 @@ let passwordSchema = (
 const Login = () => {
     //component styling
     const styles = loginStyles();
+
+    //use snackbar
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
+    //use dispatch
+    const dispatch = useDispatch();
+
+    //use navigate
+    const navigate = useNavigate();
+
+    //logged in value 
+    const loggedIn = useSelector(getLoggedIn);
+
+    //check if loggedIn status changes, if it is true navigate to home
+    useEffect(() => {
+        if (loggedIn) navigate("/home");
+    }, [loggedIn]);
 
     //login form fields
     const [loginData, setLoginData] = useState<LoginForm>({ username: "", password: "" });
@@ -92,10 +115,53 @@ const Login = () => {
         else return "*Required";
     };
 
+    //submit login to server
+    const submitLogin = () => {
+        axios({
+            method: 'post',
+            url: 'api/auth/login',
+            data: {
+                username: loginData.username,
+                password: loginData.password
+            }
+        })
+        .then(() => {
+            enqueueSnackbar("Signed in successfuly.", { variant: "success" });
+
+            //update redux
+            dispatch(setLoggedIn(true));
+        })
+        .catch(() => {
+            enqueueSnackbar("Invalid login credentials.", { variant: "error" });
+        });
+    }
+
+    //submit new account to server
+    const submitCreateAccount = () => {
+        if (newAccountData === undefined) return;
+
+        axios({
+            method: 'post',
+            url: 'api/auth/new-account',
+            data: {
+                username: newAccountData.username,
+                email: newAccountData.email,
+                password: newAccountData.password,
+            }
+        })
+        .then(() => {
+            enqueueSnackbar("Created new account successfuly.", { variant: "success" });
+
+            //update redux
+            dispatch(setLoggedIn(true));
+        })
+        .catch(() => {
+            enqueueSnackbar("Unable to create account.", { variant: "error" });
+        });
+    }
+
     //passwordHelpText as a memoized value
     const passwordHelpText = useMemo(getPasswordHelpText, [newAccountData]);
-
-    console.log(newAccountFormIsValid);
 
     return (
         <div className={styles.loginContainer}>
@@ -147,6 +213,7 @@ const Login = () => {
                         disabled={!newAccountFormIsValid}
                         color={"primary"}
                         variant={"contained"}
+                        onClick={submitCreateAccount}
                     >{"Create Account"}</Button>
                 </>
             ): (
@@ -180,7 +247,14 @@ const Login = () => {
                     <Button
                         color={"primary"}
                         variant={"contained"}
+                        onClick={submitLogin}
                     >{"Sign In"}</Button>
+                    <div className={styles.spacer}/>
+                    <Button
+                        color={"secondary"}
+                        variant={"contained"}
+                        onClick={() => navigate("/home")}
+                    >{"Cancel"}</Button>
                     <div className={styles.spacer}/>
                     <div className={styles.spacer}/>
                     
