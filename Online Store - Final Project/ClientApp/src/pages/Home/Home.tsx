@@ -74,7 +74,7 @@ const HomePage = () => {
             </div>
 
             {/* Featured Items */}
-            <div className={styles.categoryContainer} style={{ display: 'none' }}>
+            <div className={styles.categoryContainer}>
                 <Typography variant={"h5"} className={styles.categoryTitle}>{"Featured Candy"}</Typography>
                 <Grid container spacing={3}>
                     {/* Show Category Options in the Grid */}
@@ -94,7 +94,7 @@ const Home = () => {
     return (
         <Routes>
             <Route path={"/home"} element={<HomePage/>}/>
-            <Route path={"/category/:category"} element={<div/>}/>
+            <Route path={"/category/:category"} element={<CategoryPage/>}/>
             <Route path={"/item/:itemId"} element={<ItemPage/>}/>
 
             {/* Redirect to /home as a fallback */}
