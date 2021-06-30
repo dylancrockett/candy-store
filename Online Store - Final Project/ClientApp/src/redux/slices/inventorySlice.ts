@@ -64,9 +64,14 @@ export const getSearchItems = (state: RootState) => {
 
     //add items
     for (var item of (state.inventory.value.items ?? [])) {
+        //get item category
+        const category = (state.inventory.value.categories ?? []).find(x => x.categoryId === item.categoryId);
+
+        if (!category) continue;
+
         results.push({
             item: item.itemName,
-            page: "/item/" + item.itemId
+            page: "/category/" + category.categoryName.toLocaleLowerCase()
         })
     }
 

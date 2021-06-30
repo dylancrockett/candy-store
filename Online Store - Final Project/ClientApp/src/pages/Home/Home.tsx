@@ -8,6 +8,7 @@ import homeStyles from './HomeStyles';
 import { useSelector } from 'react-redux';
 import { getCategories, getItems } from '../../redux/slices/inventorySlice';
 import ItemCard from './CategoryPage/ItemCard/ItemCard';
+import ItemPage from './ItemPage/ItemPage';
 
 const HomePage = () => {
     //component styling
@@ -26,14 +27,14 @@ const HomePage = () => {
 
     //function for getting randomized list of 6 items
     const getFeaturedItems = () => {
-        const array = items.slice(0, 6);
+        const array = [...items];
 
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [array[i], array[j]] = [array[j], array[i]];
         }
 
-        return array;
+        return array.slice(0, 4);
     }
 
     return (
@@ -52,8 +53,8 @@ const HomePage = () => {
                 <Grid container spacing={3}>
                     {/* Show Category Options in the Grid */}
                     {(categories ?? []).map((category, index) => (
-                        <Grid item xs={6} sm={6} md={4} lg={2} key={index}>
-                            <Card>
+                        <Grid item xs={12} sm={6} md={4} lg={3} className={styles.gridItem} key={index}>
+                            <Card className={styles.gridCard}>
                                 <CardActionArea onClick={() => navigate("/category/" + category.categoryName.toLowerCase())}>
                                     <CardMedia
                                         className={styles.categoryCardMedia}
@@ -73,12 +74,12 @@ const HomePage = () => {
             </div>
 
             {/* Featured Items */}
-            <div className={styles.categoryContainer}>
+            <div className={styles.categoryContainer} style={{ display: 'none' }}>
                 <Typography variant={"h5"} className={styles.categoryTitle}>{"Featured Candy"}</Typography>
                 <Grid container spacing={3}>
                     {/* Show Category Options in the Grid */}
                     {getFeaturedItems().map((item, index) => (
-                        <Grid item xs={6} sm={6} md={4} lg={2} key={index}>
+                        <Grid item xs={12} sm={6} md={4} lg={3} className={styles.gridItem} key={index}>
                             <ItemCard item={item}/>
                         </Grid>
                     ))}
@@ -93,7 +94,9 @@ const Home = () => {
     return (
         <Routes>
             <Route path={"/home"} element={<HomePage/>}/>
-            <Route path={"/category/:category"} element={<CategoryPage/>}/>
+            <Route path={"/category/:category"} element={<div/>}/>
+            <Route path={"/item/:itemId"} element={<ItemPage/>}/>
+
             {/* Redirect to /home as a fallback */}
             <Route element={<Navigate to={"/home"}/>}/>
         </Routes>

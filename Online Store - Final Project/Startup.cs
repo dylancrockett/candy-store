@@ -38,7 +38,7 @@ namespace Online_Store___Final_Project
                 options.Cookie.IsEssential = true;
             });
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme);
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

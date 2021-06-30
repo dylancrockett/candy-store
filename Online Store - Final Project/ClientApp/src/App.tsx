@@ -62,6 +62,7 @@ const App = () => {
         {/* App Content */}
         <Routes>
           {/* Checkout Page */}
+          <Route path={"/checkout"} element={<LoginRequired><div/></LoginRequired>}/>
 
           {/* User Account Page (Login Required) */}
           <Route path={"/account"} element={<LoginRequired><Account/></LoginRequired>}/>

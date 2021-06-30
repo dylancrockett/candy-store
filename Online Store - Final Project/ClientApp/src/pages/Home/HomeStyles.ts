@@ -9,10 +9,16 @@ const homeStyles = makeStyles((theme) => ({
         marginBottom: '10px'
     },
     categoryCardMedia: {
-        height: '150px'
+        minHeight: '150px'
     },
     categoryCardDescription: {
         marginRight: '10px'
+    },
+    gridItem: {
+        display: 'flex'
+    },
+    gridCard: {
+        flex: '1'
     }
 }));
 
